@@ -1,15 +1,212 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
-    public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+import CityProject.*;
+import StationsProject.App;
+import StationsProject.AppClass;
+import dataStructures.Iterator;
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+import java.io.*;
+import dataStructures.exceptions.NoSuchElementException;
+import dataStructures.exceptions.ElementAlreadyExistsException;
+import java.util.Scanner;
+
+/**
+ * Authors:
+ * - Joana Brito, 74082
+ * - Manuel Mendes, 74538
+ */
+public class Main {
+
+    private static final String SERIAL_FILE = "1_.ser";
+
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        App app = loadApp(args);
+        if (app == null) {
+            System.out.print(Message.NO_LINE);
+        } else {
+            commandInterpreter(in, app);
+        }
+        in.close();
+    }
+
+
+    private static void commandInterpreter(Scanner in, App app) {
+        Command command = Command.fromString(in.nextLine());
+        while (command != Command.QUIT) {
+            switch (command) {
+                case HELP -> help();
+                case ADD_JOURNEY -> addJourney(in, app);
+                case FIND_JOURNEY -> findJourney(in, app);
+                case FIND_JOURNEY_MIN_STOPS -> findJourneyMinStops(in, app);
+                case REMOVE_JOURNEY -> removeJourney(in, app);
+                case MIN_TRANSFERS -> minTransfers(in, app);
+            }
+            command = Command.fromString(in.nextLine());
+        }
+        quit(app);
+    }
+
+
+    private static void help() {
+        System.out.print(Message.HELP);
+    }
+
+
+    private static void quit(App app) {
+        saveApp(app);
+    }
+
+
+    private static void saveApp(App app) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SERIAL_FILE))) {
+            oos.writeObject(app);
+            oos.flush();
+            System.out.print(Message.QUIT);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+
+
+    private static App loadApp(String[] args) {
+        App app = restoreApp();
+        if (app != null) {
+            System.out.print(Message.RESTORED);
+            return app;
+        }
+        if (args.length > 0) {
+            app = createApp(args[0]);
+        }
+        return app;
+    }
+
+    private static App restoreApp() {
+        File file = new File(SERIAL_FILE);
+        if (!file.exists()) {
+            return null;
+        }
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            return (App) ois.readObject();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private static AppClass createApp(String path) {
+        try (Scanner file = new Scanner(new File(path))) {
+            int n = file.nextInt();
+            file.nextLine();
+            AppClass app = new AppClass(n);
+            for (int i = 0; i < n; i++) {
+                app.addStation(file.nextLine().trim());
+            }
+            System.out.print(Message.NOT_FOUND);
+            System.out.printf(Message.LOADING.toString(), n);
+            return app;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+
+    private static void addJourney(Scanner in, App app) {
+        String id = in.nextLine();
+        int n = file.nextInt();
+        file.nextLine();
+        Journey journey = app.newJourney(id, n);
+        journey.addFirstStop(in.nextLine(), in.nextLine().trim());
+        for (int i = 1; i < n - 1; i++) {
+            String station = in.nextLine();
+            String arrival = in.nextLine().trim();
+            String departure = in.nextLine().trim();
+            journey.addStop(station, arrival, departure);
+        }
+        journey.addLastStop(in.nextLine(), in.nextLine().trim());
+        try {
+            app.addJourney(journey);
+            System.out.print(Message.ADDED);
+        } catch (ElementAlreadyExistsException e) {
+            System.out.print(Message.ALREADY_EXISTS);
+        }
+    }
+
+    private static void findJourney(Scanner in, App app) {
+        String origin = in.nextLine();
+        String destination = in.nextLine();
+        String time = in.nextLine().trim();
+        try {
+            JourneyInfo journey = app.findJourney(origin, destination, time);
+            System.out.printf(Message.JOURNEY ,
+                    journey.getId(),
+                    journey.getDepartureStation(),
+                    journey.getDepartureTime(),
+                    journey.getArrivalStation(),
+                    journey.getArrivalTime());
+        } catch (InvalidStationException e) {
+            System.out.print(Message.INVALID_STATION);
+        } catch (InvalidTimeException e) {
+            System.out.print(Message.INVALID_TIME);
+        } catch (StationsOrderException e) {
+            System.out.print(Message.WRONG_ORDER);
+        } catch (NoSuchElementException e) {
+            System.out.print(Message.NO_DIRECT_JOURNEY);
+        }
+    }
+
+    private static void findJourneyMinStops(Scanner in, App app) {
+        String origin = in.nextLine();
+        String destination = in.nextLine();
+        String intervalStart = in.next().trim();
+        String intervalEnd = in.next().trim();
+        in.nextLine();
+        try {
+            JourneyInfo journey = app.findJourneyMinStops(origin, destination, intervalStart, intervalEnd);
+            System.out.printf(Message.JOURNEY_STOPS.toString(),
+                    journey.getId(),
+                    journey.getDepartureStation(),
+                    journey.getDepartureTime(),
+                    journey.getArrivalStation(),
+                    journey.getArrivalTime(),
+                    journey.getStops());
+        } catch (InvalidStationException e) {
+            System.out.print(Message.INVALID_STATION);
+        } catch (InvalidTimeException e) {
+            System.out.print(Message.INVALID_TIME);
+        } catch (InvalidIntervalException e) {
+            System.out.print(Message.INVALID_INTERVAL);
+        } catch (StationsOrderException e) {
+            System.out.print(Message.WRONG_ORDER);
+        } catch (NoSuchElementException e) {
+            System.out.print(Message.NO_DIRECT_JOURNEY);
+        }
+    }
+
+    private static void removeJourney(Scanner in, App app) {
+        String id = in.nextLine();
+        try {
+            app.removeJourney(id);
+            System.out.print(Message.REMOVED);
+        } catch (NoSuchElementException e) {
+            System.out.print(Message.INVALID_JOURNEY);
+        }
+    }
+
+    private static void minTransfers(Scanner in, App app) {
+        String origin = in.nextLine();
+        String destination = in.nextLine();
+        try {
+            int transfers = app.minTransfers(origin, destination);
+            if (transfers < 0) {
+                System.out.print(Message.UNREACHABLE);
+            } else {
+                System.out.printf(Message.MIN_TRANSFERS.toString(), transfers);
+            }
+        } catch (InvalidStationException e) {
+            System.out.print(Message.INVALID_STATION);
+        } catch (StationsOrderException e) {
+            System.out.print(Message.WRONG_ORDER);
+        }
+    }
+
+
 }
