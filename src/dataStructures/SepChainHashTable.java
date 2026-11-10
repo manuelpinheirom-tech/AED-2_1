@@ -1,4 +1,11 @@
 package dataStructures;
+
+import dataStructures.exceptions.NoSuchElementException;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 /**
  * SepChain Hash Table
  * @author AED  Team
@@ -38,7 +45,17 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
     }
 
     private void rehash() {
-        //TODO: Left as an exercise.
+        //TODO: Left as an exercise.Done
+        Set<Entry<K, V>>[] oldTable = table;
+        table = createTable(table.length * 2);
+        for ( int i = 0; i < oldTable.length; i++ ){
+            Iterator<Entry<K,V>> it = oldTable[i].iterator();
+            while(it.hasNext()){
+                Entry<K,V> e = it.next();
+                int newIndex = hash(e.getKey());
+                table[newIndex].put(e);
+            }
+        }
         
     }
     // Returns the hash value of the specified key.
@@ -55,7 +72,16 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
      */
     @Override
     public V get(K key) {
-        //TODO: Left as an exercise.
+        //TODO: Left as an exercise.Done
+        int index = hash(key);
+        Iterator<Entry<K,V>> it =  table[index].iterator();
+
+        while(it.hasNext()){
+            Entry<K,V> e = it.next();
+            if(e.getKey().equals(key)){
+                return e.getValue();
+            }
+        }
         return null;
     }
 
@@ -74,6 +100,21 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
         if (isFull())
             rehash();
         //TODO: Left as an exercise.
+        int index = hash(key);
+        Iterator<Entry<K, V>> it = table[index].iterator();
+
+        while (it.hasNext()) {
+            Entry<K, V> entry = it.next();
+            if (entry.getKey().equals(key)) {
+                V oldValue = entry.getValue();
+                table[index].remove(entry);
+                table[index].put(new Entry<>(key, value));
+                return oldValue;
+            }
+        }
+
+        table[index].put(new Entry<>(key, value));
+        currentSize++;
         return null;
     }
 
@@ -90,6 +131,18 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
     @Override
     public V remove(K key) {
         //TODO: Left as an exercise.
+        int index = hash(key);
+        Iterator<Entry<K, V>> it = table[index].iterator();
+
+        while (it.hasNext()) {
+            Entry<K, V> entry = it.next();
+            if (entry.getKey().equals(key)) {
+                V value = entry.getValue();
+                table[index].remove(entry);
+                currentSize--;
+                return value;
+            }
+        }
         return null;
     }
 
@@ -106,11 +159,33 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
     void writeData(ObjectOutputStream oos)
             throws IOException {
         //TODO: Left as an exercise.
+            oos.writeInt(currentSize);
+            oos.writeInt(table.length);
+            for (int i = 0; i < table.length; i++) {
+                Iterator<Entry<K, V>> it = table[i].iterator();
+                while (it.hasNext()) {
+                    Entry<K, V> e = it.next();
+                    oos.writeObject(e.getKey());
+                    oos.writeObject(e.getValue());
+                }
+            }
+
     }
 
     void readData(ObjectInputStream ios)
             throws IOException, ClassNotFoundException {
         //TODO: Left as an exercise.
+        int size = ios.readInt();
+        int capacity = ios.readInt();
+
+        table = createTable(capacity);
+        this.currentSize = 0;
+
+        for (int i = 0; i < size; i++) {
+            K key = (K) ios.readObject();
+            V value = (V) ios.readObject();
+            this.put(key, value);
+        }
     }
    
 }

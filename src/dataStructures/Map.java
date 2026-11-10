@@ -22,6 +22,14 @@ public interface Map<K,V> extends Serializable {
             K key=((Entry<K, V>)obj).key();
             return key().equals(key);
         }
+
+        public K getKey(){
+            return key;
+        }
+
+        public V getValue(){
+            return value;
+        }
     }
     /**
      * Returns true iff the map contains no entries.
