@@ -1,4 +1,4 @@
-import CityProject.*;
+import StationsProject.*;
 import StationsProject.App;
 import StationsProject.AppClass;
 import dataStructures.Iterator;
@@ -39,7 +39,6 @@ public class Main {
                 case FIND_JOURNEY -> findJourney(in, app);
                 case FIND_JOURNEY_MIN_STOPS -> findJourneyMinStops(in, app);
                 case REMOVE_JOURNEY -> removeJourney(in, app);
-                case MIN_TRANSFERS -> minTransfers(in, app);
             }
             command = Command.fromString(in.nextLine());
         }
@@ -188,23 +187,6 @@ public class Main {
             System.out.print(Message.REMOVED);
         } catch (NoSuchElementException e) {
             System.out.print(Message.INVALID_JOURNEY);
-        }
-    }
-
-    private static void minTransfers(Scanner in, App app) {
-        String origin = in.nextLine();
-        String destination = in.nextLine();
-        try {
-            int transfers = app.minTransfers(origin, destination);
-            if (transfers < 0) {
-                System.out.print(Message.UNREACHABLE);
-            } else {
-                System.out.printf(Message.MIN_TRANSFERS.toString(), transfers);
-            }
-        } catch (InvalidStationException e) {
-            System.out.print(Message.INVALID_STATION);
-        } catch (StationsOrderException e) {
-            System.out.print(Message.WRONG_ORDER);
         }
     }
 
