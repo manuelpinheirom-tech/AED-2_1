@@ -75,7 +75,6 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
         //TODO: Left as an exercise.Done
         int index = hash(key);
         Iterator<Entry<K,V>> it =  table[index].iterator();
-
         while(it.hasNext()){
             Entry<K,V> e = it.next();
             if(e.getKey().equals(key)){

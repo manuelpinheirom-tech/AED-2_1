@@ -12,4 +12,30 @@ public class QueueInList<E> implements Queue<E> {
     }
 
     //TODO: Left as an exercise.
+    @Override
+    public boolean isEmpty() {
+        return list.isEmpty();
+    }
+
+    @Override
+    public int size() {
+        return list.size();
+    }
+
+    @Override
+    public void enqueue(E element) {
+        list.addLast(element);
+    }
+
+    @Override
+    public E peek() {
+        return list.getFirst();
+    }
+
+    @Override
+    public E dequeue() {
+        if (isEmpty())
+            throw new EmptyQueueException();
+        return list.removeFirst();
+    }
 }

@@ -73,6 +73,17 @@ public class BSTree<K extends Comparable<K>,V> extends BTree<Entry<K,V>> impleme
      */
     public V get(K key) {
         //TODO: Left as an exercise.
+        BTNode<Entry<K,V>> node = (BTNode<Entry<K,V>>) root;
+        while (node != null) {
+            int comp = comparator.compare(key, node.getElement().getKey());
+            if (comp == 0) {
+                return node.getElement().getValue();
+            }else if (comp > 0) {
+                node = (BTNode<Entry<K, V>>) node.getRightChild();
+            }else{
+                node = (BTNode<Entry<K, V>>) node.getLeftChild();
+            }
+        }
         return null;
     }
 
@@ -89,6 +100,35 @@ public class BSTree<K extends Comparable<K>,V> extends BTree<Entry<K,V>> impleme
      */
     public V put(K key, V value) {
         //TODO: Left as an exercise.
+        BTNode<Entry<K,V>> current = (BTNode<Entry<K,V>>) root;
+        BTNode<Entry<K,V>> parent = null;
+        int comp = 0;
+
+        while (current != null) {
+            comp = comparator.compare(key, current.getElement().key());
+            if (comp == 0) {
+                V oldValue = current.getElement().value();
+                current.setElement(new Entry<>(key, value));
+                return oldValue;
+            }
+            parent = current;
+            if (comp < 0) {
+                current = (BTNode<Entry<K, V>>) current.getLeftChild();
+            } else {
+                current = (BTNode<Entry<K,V>>) current.getRightChild();
+            }
+        }
+
+        BTNode<Entry<K,V>> newNode = new BTNode<>(new Entry<>(key, value));
+
+        if (parent == null) {
+            root = newNode;
+        } else if (comp < 0) {
+            parent.setLeftChild(newNode);
+        } else {
+            parent.setRightChild(newNode);
+        }
+
         return null;
     }
 
@@ -103,8 +143,43 @@ public class BSTree<K extends Comparable<K>,V> extends BTree<Entry<K,V>> impleme
      */
     public V remove(K key) {
         //TODO: Left as an exercise.
-        return null;
-    }
+            V oldValue = get(key);
+
+            if (oldValue != null) {
+                root = removeRecursively((BTNode<Entry<K,V>>) root, key);
+            }
+
+            return oldValue;
+        }
+
+        private BTNode<Entry<K,V>> removeRecursively(BTNode<Entry<K,V>> node, K key) {
+            if (node == null) return null;
+
+            int comp = comparator.compare(key, node.getElement().key());
+
+            if (comp < 0) {
+                node.setLeftChild(removeRecursively((BTNode<Entry<K, V>>) node.getLeftChild(), key));
+            } else if (comp > 0) {
+                node.setRightChild(removeRecursively((BTNode<Entry<K, V>>) node.getRightChild(), key));
+            } else {
+                if (node.getLeftChild() == null)
+                    return (BTNode<Entry<K, V>>) node.getRightChild();
+                if (node.getRightChild() == null)
+                    return (BTNode<Entry<K, V>>) node.getLeftChild();
+
+                BTNode<Entry<K,V>> minRight = findMin((BTNode<Entry<K, V>>) node.getRightChild());
+                node.setElement(minRight.getElement()); // Substitui o elemento
+                node.setRightChild(removeRecursively((BTNode<Entry<K, V>>) node.getRightChild(), minRight.getElement().key())); // Remove o duplicado
+            }
+            return node;
+        }
+
+        private BTNode<Entry<K,V>> findMin(BTNode<Entry<K,V>> node) {
+            while (node.getLeftChild() != null) {
+                node = (BTNode<Entry<K, V>>) node.getLeftChild();
+            }
+            return node;
+        }
 
     /**
      * Returns an iterator of the entries in the dictionary.

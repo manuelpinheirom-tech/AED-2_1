@@ -20,4 +20,36 @@ class QueueInArray<E> implements Queue<E> {
     }
 
     //TODO: Left as an exercise.
+    private boolean isFull() {
+        return elements.size() == capacity;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return elements.isEmpty();
+    }
+
+    @Override
+    public int size() {
+        return elements.size();
+    }
+
+    @Override
+    public void enqueue(E element) {
+        if (isFull())
+            throw new FullQueueException();
+        elements.addLast(element);
+    }
+
+    @Override
+    public E peek() {
+        return elements.getFirst();
+    }
+
+    @Override
+    public E dequeue() {
+        if (isEmpty())
+            throw new EmptyQueueException();
+        return elements.removeFirst();
+    }
 }

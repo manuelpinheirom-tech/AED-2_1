@@ -117,7 +117,18 @@ class BTNode<E> implements InfoNode<E>, Serializable {
 
     int getHeight() {
         //TODO: Left as an exercise.
-	return 0;
+        int leftHeight = 0;
+        int rightHeight = 0;
+
+        if (leftChild != null) {
+            leftHeight = ((BTNode<E>) leftChild).getHeight();
+        }
+
+        if (rightChild != null) {
+            rightHeight = ((BTNode<E>) rightChild).getHeight();
+        }
+
+        return 1 + Math.max(leftHeight, rightHeight);
     }
 
     /**
@@ -126,12 +137,17 @@ class BTNode<E> implements InfoNode<E>, Serializable {
      */
     BTNode<E> furtherLeftElement() {
         //TODO: Left as an exercise.
-        return null;
+        BTNode<E> node = this;
+        while (node.leftChild != null)
+            node = (BTNode<E>) node.leftChild;
+        return node;
     }
 
     BTNode<E> furtherRightElement() {
        //TODO: Left as an exercise.
-       return null;
+        BTNode<E> node = this;
+        while (node.rightChild != null)
+            node = (BTNode<E>) node.rightChild;
+        return node;
     }
-
 }

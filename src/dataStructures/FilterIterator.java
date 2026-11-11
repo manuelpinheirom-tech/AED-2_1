@@ -31,7 +31,8 @@ public class FilterIterator<E> implements Iterator<E> {
      */
     public FilterIterator(Iterator<E> it, Predicate<E> criterion) {
         //TODO: Left as an exercise.
-        
+        iterator = it;
+        filter = criterion;
     }
     
     /**
@@ -49,13 +50,15 @@ public class FilterIterator<E> implements Iterator<E> {
      * @throws NoSuchElementException - if call is made without verifying pre-condition
      */
     public E next() {
-        //TODO: Left as an exercise.   
+        //TODO: Left as an exercise.
+        return iterator.next();
     }
     /**
      * Restarts the iteration.
      * After rewind, if the iteration is not empty, next will return the first element.
      */
     public void rewind() {
-        //TODO: Left as an exercise.   
+        //TODO: Left as an exercise.
+        iterator.rewind();
     }
 }

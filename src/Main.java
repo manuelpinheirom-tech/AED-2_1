@@ -110,17 +110,17 @@ public class Main {
 
     private static void addJourney(Scanner in, App app) {
         String id = in.nextLine();
-        int n = file.nextInt();
-        file.nextLine();
-        Journey journey = app.newJourney(id, n);
-        journey.addFirstStop(in.nextLine(), in.nextLine().trim());
+        int n =  in.nextInt();
+        in.nextLine();
+        app.newJourney(id, n);
+        app.addFirstStop(id, in.nextLine(), in.nextLine().trim());
         for (int i = 1; i < n - 1; i++) {
             String station = in.nextLine();
             String arrival = in.nextLine().trim();
             String departure = in.nextLine().trim();
-            journey.addStop(station, arrival, departure);
+            app.addStop(id, station, arrival, departure);
         }
-        journey.addLastStop(in.nextLine(), in.nextLine().trim());
+        app.addLastStop(id, in.nextLine(), in.nextLine().trim());
         try {
             app.addJourney(journey);
             System.out.print(Message.ADDED);

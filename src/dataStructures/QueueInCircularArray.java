@@ -30,4 +30,42 @@ public class QueueInCircularArray<E> implements Queue<E>{
     }
 
     //TODO: Left as an exercise.
+    private boolean isFull() {
+        return currentSize == array.length;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return currentSize == 0;
+    }
+
+    @Override
+    public int size() {
+        return currentSize;
+    }
+
+    @Override
+    public void enqueue(E element) {
+        if (isFull())
+            throw new FullQueueException();
+        int rear = (front + currentSize) % array.length;
+        array[rear] = element;
+        currentSize++;
+    }
+
+    @Override
+    public E peek() {
+        return array[front];
+    }
+
+    @Override
+    public E dequeue() {
+        if (isEmpty())
+            throw new EmptyQueueException();
+        E element = array[front];
+        array[front] = null;
+        front = (front + 1) % array.length;
+        currentSize--;
+        return element;
+    }
 }

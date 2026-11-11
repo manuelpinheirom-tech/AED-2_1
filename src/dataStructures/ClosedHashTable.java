@@ -1,4 +1,9 @@
 package dataStructures;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 /**
  * Closed Hash Table
  * @author AED  Team
@@ -56,7 +61,15 @@ public class ClosedHashTable<K,V> extends HashTable<K,V> {
      */
     int searchLinearProving(K key) {
         //TODO: Left as an exercise.
-        return NOT_FOUND; // all cells were covered, the element was not found
+        for (int i = 0; i < table.length; i++) {
+            int id = hash(key, i);
+            Entry<K,V> e = table[id];
+            if (e == null)
+                return NOT_FOUND;
+            if (e != REMOVED_CELL && e.getKey().equals(key))
+                return id;
+        }
+        return NOT_FOUND;
     }
 
     
@@ -71,7 +84,10 @@ public class ClosedHashTable<K,V> extends HashTable<K,V> {
     @Override
     public V get(K key) {
         //TODO: Left as an exercise.
-        return null;
+        int idx = searchLinearProving(key);
+        if (idx == NOT_FOUND)
+            return null;
+        return table[idx].getValue();
     }
 
     /**
@@ -89,13 +105,42 @@ public class ClosedHashTable<K,V> extends HashTable<K,V> {
         if (isFull())
             rehash();
         //TODO: Left as an exercise.
+        int firstFree = NOT_FOUND;
+        for (int i = 0; i < table.length; i++) {
+            int idx = hash(key, i);
+            Entry<K,V> e = table[idx];
+            if (e == null) {
+                int pos = (firstFree != NOT_FOUND) ? firstFree : idx;
+                table[pos] = new Entry<>(key, value);
+                currentSize++;
+                return null;
+            }
+            if (e == REMOVED_CELL) {
+                if (firstFree == NOT_FOUND)
+                    firstFree = idx;
+            }
+            else if (e.getKey().equals(key)) {
+                V old = e.getValue();
+                table[idx] = new Entry<>(key, value);
+                return old;
+            }
+        }
+        if (firstFree != NOT_FOUND) {
+            table[firstFree] = new Entry<>(key, value);
+            currentSize++;
+        }
         return null;
     }
 
     
     private void rehash() {
         //TODO: Left as an exercise.
-        
+        Entry<K,V>[] old = table;
+        table = createTable(old.length);
+        currentSize = 0;
+        for (Entry<K,V> e : old)
+            if (e != null && e != REMOVED_CELL)
+                put(e.getKey(), e.getValue());
     }
 
     /**
@@ -108,9 +153,16 @@ public class ClosedHashTable<K,V> extends HashTable<K,V> {
      * or null if the dictionary does not an entry with that key
      */
     @Override
+    @SuppressWarnings("unchecked")
     public V remove(K key) {
         //TODO: Left as an exercise.
-        return null;
+        int idx = searchLinearProving(key);
+        if (idx == NOT_FOUND)
+            return null;
+        V value = table[idx].getValue();
+        table[idx] = (Entry<K,V>) REMOVED_CELL;
+        currentSize--;
+        return value;
     }
 
     /**
@@ -127,10 +179,25 @@ public class ClosedHashTable<K,V> extends HashTable<K,V> {
     void writeData(ObjectOutputStream oos)
             throws IOException {
         //TODO: Left as an exercise.
+        oos.writeInt(currentSize);
+        for (Entry<K,V> e : table)
+            if (e != null && e != REMOVED_CELL) {
+                oos.writeObject(e.getKey());
+                oos.writeObject(e.getValue());
+            }
     }
 
+    @SuppressWarnings("unchecked")
     void readData(ObjectInputStream ios)
             throws IOException, ClassNotFoundException {
         //TODO: Left as an exercise.
+        int n = ios.readInt();
+        table = createTable(n > 0 ? n : DEFAULT_CAPACITY);
+        currentSize = 0;
+        for (int i = 0; i < n; i++) {
+            K key = (K) ios.readObject();
+            V value = (V) ios.readObject();
+            put(key, value);
+        }
     }
 }
