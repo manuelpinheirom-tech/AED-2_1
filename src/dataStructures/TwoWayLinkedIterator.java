@@ -33,6 +33,47 @@ class TwoWayLinkedIterator<E> extends LinkedIterator<E>
     }
 
     //TODO: Left as an exercise.
-    
 
+    public boolean hasNext() {
+        return super.hasNext();
+    }
+
+    public E next() throws NoSuchElementException {
+        if(!hasNext()){
+            throw new NoSuchElementException();
+        }
+        prevToReturn = nextToReturn;
+        E element = nextToReturn.getElement();
+        nextToReturn=prevToReturn.getNext();
+        return element;
+    }
+
+    public boolean hasPrevious(){
+        return prevToReturn!=null;
+    }
+
+    public E previous() throws NoSuchElementException {
+        if (!hasPrevious()) {
+            throw new NoSuchElementException();
+        }
+        E element = prevToReturn.getElement();
+        nextToReturn = prevToReturn;
+        if (prevToReturn instanceof DoublyListNode) {
+            prevToReturn = ((DoublyListNode<E>) prevToReturn).getPrevious();
+        } else {
+            prevToReturn = null;
+        }
+        return element;
+    }
+
+    public void fullForward() {
+        nextToReturn = null;
+        prevToReturn = lastNode;
+    }
+
+    @Override
+    public void rewind() {
+        super.rewind();
+        prevToReturn = null;
+    }
 }

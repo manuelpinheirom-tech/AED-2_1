@@ -13,4 +13,6 @@ public interface JourneyInfo {
     String getArrivalTime(String station);
 
     int getStops(String origin, String destination);
+
+    String getDepartureStation();
 }
