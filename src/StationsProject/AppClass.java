@@ -18,14 +18,9 @@ public class AppClass implements App, Serializable {
     }
 
 
-    @Override
-    public Journey newJourney(String id, int n) {
-
-
-    }
 
     @Override
-    public void addJourney(Journey journey) throws ElementAlreadyExistsException {
+    public void addJourney(String id, int n) throws ElementAlreadyExistsException {
 
     }
 

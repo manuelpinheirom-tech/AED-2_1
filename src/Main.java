@@ -55,7 +55,7 @@ public class Main {
         saveApp(app);
     }
 
-
+        // esta merda tem de ir somehow para a appClass
     private static void saveApp(App app) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SERIAL_FILE))) {
             oos.writeObject(app);
@@ -112,7 +112,8 @@ public class Main {
         String id = in.nextLine();
         int n =  in.nextInt();
         in.nextLine();
-        app.newJourney(id, n);
+        try {
+        app.addJourney(id, n);
         app.addFirstStop(id, in.nextLine(), in.nextLine().trim());
         for (int i = 1; i < n - 1; i++) {
             String station = in.nextLine();
@@ -121,11 +122,10 @@ public class Main {
             app.addStop(id, station, arrival, departure);
         }
         app.addLastStop(id, in.nextLine(), in.nextLine().trim());
-        try {
-            app.addJourney(journey);
-            System.out.print(Message.ADDED);
+        System.out.print(Message.ADDED);
         } catch (ElementAlreadyExistsException e) {
             System.out.print(Message.ALREADY_EXISTS);
+            clearBuffer(in, n * 3 -2);
         }
     }
 
@@ -135,20 +135,22 @@ public class Main {
         String time = in.nextLine().trim();
         try {
             JourneyInfo journey = app.findJourney(origin, destination, time);
-            System.out.printf(Message.JOURNEY ,
-                    journey.getId(),
-                    journey.getDepartureStation(),
-                    journey.getDepartureTime(),
-                    journey.getArrivalStation(),
-                    journey.getArrivalTime());
+            if(journey == null)
+                System.out.print(Message.NO_DIRECT_JOURNEY);
+            else {
+                System.out.printf(Message.JOURNEY.toString() ,
+                        journey.getId(),
+                        journey.getDepartureStation(),
+                        journey.getDepartureTime(origin),
+                        journey.getDestinationName(),
+                        journey.getArrivalTime(destination));
+            }
         } catch (InvalidStationException e) {
             System.out.print(Message.INVALID_STATION);
         } catch (InvalidTimeException e) {
             System.out.print(Message.INVALID_TIME);
         } catch (StationsOrderException e) {
             System.out.print(Message.WRONG_ORDER);
-        } catch (NoSuchElementException e) {
-            System.out.print(Message.NO_DIRECT_JOURNEY);
         }
     }
 
@@ -160,13 +162,17 @@ public class Main {
         in.nextLine();
         try {
             JourneyInfo journey = app.findJourneyMinStops(origin, destination, intervalStart, intervalEnd);
-            System.out.printf(Message.JOURNEY_STOPS.toString(),
-                    journey.getId(),
-                    journey.getDepartureStation(),
-                    journey.getDepartureTime(),
-                    journey.getArrivalStation(),
-                    journey.getArrivalTime(),
-                    journey.getStops());
+            if(journey == null)
+                System.out.print(Message.NO_DIRECT_JOURNEY);
+            else {
+                System.out.printf(Message.JOURNEY_STOPS.toString(),
+                        journey.getId(),
+                        journey.getOriginName(),
+                        journey.getDepartureTime(origin),
+                        journey.getDestinationName(),
+                        journey.getArrivalTime(destination),
+                        journey.getStops(origin, destination));
+            }
         } catch (InvalidStationException e) {
             System.out.print(Message.INVALID_STATION);
         } catch (InvalidTimeException e) {
@@ -175,8 +181,6 @@ public class Main {
             System.out.print(Message.INVALID_INTERVAL);
         } catch (StationsOrderException e) {
             System.out.print(Message.WRONG_ORDER);
-        } catch (NoSuchElementException e) {
-            System.out.print(Message.NO_DIRECT_JOURNEY);
         }
     }
 
@@ -190,5 +194,9 @@ public class Main {
         }
     }
 
-
+    private static void clearBuffer(Scanner in, int n){
+        for(int i = 0; i < n; i++){
+            in.nextLine();
+        }
+    }
 }

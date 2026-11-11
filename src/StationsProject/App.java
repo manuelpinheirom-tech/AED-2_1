@@ -7,9 +7,9 @@ import java.io.Serializable;
 
 public interface App extends Serializable {
 
-    Journey newJourney(String id, int n);
 
-    void addJourney(Journey builder) throws ElementAlreadyExistsException;
+
+    void addJourney(String id, int n) throws ElementAlreadyExistsException;
 
     void removeJourney(String id) throws NoSuchElementException;
 
