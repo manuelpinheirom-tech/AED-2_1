@@ -1,7 +1,6 @@
 import StationsProject.*;
 import StationsProject.App;
 import StationsProject.AppClass;
-import dataStructures.Iterator;
 
 import java.io.*;
 import dataStructures.exceptions.*;
@@ -19,7 +18,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         String lineFile = args.length > 0 ? args[0] : null;
-        App app = loadApp(SERIAL_FILE, lineFile);
+        App app = loadApp(lineFile);
         if (app == null) {
             System.out.print(Message.NO_LINE);
         } else {
@@ -54,7 +53,7 @@ public class Main {
     }
 
 
-    private static App loadApp(String SERIAL_FILE, String lineFile) {
+    private static App loadApp(String lineFile) {
         try{
             App app = AppClass.restoreApp(SERIAL_FILE);
             System.out.print(Message.RESTORED);
