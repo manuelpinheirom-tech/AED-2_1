@@ -10,40 +10,29 @@ import dataStructures.exceptions.NoSuchElementException;
  */
 
 class BreadthIterator<E> implements Iterator<E> {
-    //TODO: Left as an exercise.
-
     private final BTNode<E> root;
-
-    private Queue<BTNode<E>> queue;
+    private SinglyLinkedList<BTNode<E>> queue;
 
     public BreadthIterator(BTNode<E> root) {
         this.root = root;
-        this.rewind();
+        rewind();
     }
 
     @Override
-    public boolean hasNext() {
-        return !queue.isEmpty();
-    }
+    public boolean hasNext() { return !queue.isEmpty(); }
 
     @Override
-    public E next() throws NoSuchElementException {
-        if (!hasNext()) {
-            throw new NoSuchElementException();
-        }
-        BTNode<E> currentNode = queue.dequeue();
-        if(currentNode.getLeftChild() != null) {
-            queue.enqueue((BTNode<E>) currentNode.getLeftChild());
-        }
-        if(currentNode.getRightChild() != null) {
-            queue.enqueue((BTNode<E>) currentNode.getRightChild());
-        }
-        return currentNode.getElement();
+    public E next() {
+        if (!hasNext()) throw new NoSuchElementException();
+        BTNode<E> cur = queue.removeFirst();
+        if (cur.getLeftChild() != null)  queue.addLast((BTNode<E>) cur.getLeftChild());
+        if (cur.getRightChild() != null) queue.addLast((BTNode<E>) cur.getRightChild());
+        return cur.getElement();
     }
 
     @Override
     public void rewind() {
-        queue = new QueueInArray<BTNode<E>>();
+        queue = new SinglyLinkedList<>();
+        if (root != null) queue.addLast(root);
     }
-
 }

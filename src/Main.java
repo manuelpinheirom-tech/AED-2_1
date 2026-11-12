@@ -91,12 +91,12 @@ public class Main {
         app.addJourney(id, n);
         app.addFirstStop(id, in.nextLine(), in.nextLine().trim());
         for (int i = 1; i < n - 1; i++) {
-            String station = in.nextLine();
+            String station = in.nextLine().trim();
             String arrival = in.nextLine().trim();
             String departure = in.nextLine().trim();
             app.addStop(id, station, arrival, departure);
         }
-        app.addLastStop(id, in.nextLine(), in.nextLine().trim());
+        app.addLastStop(id, in.nextLine().trim(), in.nextLine().trim());
         System.out.print(Message.ADDED);
         } catch (ElementAlreadyExistsException e) {
             System.out.print(Message.ALREADY_EXISTS);
@@ -106,8 +106,8 @@ public class Main {
     }
 
     private static void findJourney(Scanner in, App app) {
-        String origin = in.nextLine();
-        String destination = in.nextLine();
+        String origin = in.nextLine().trim();
+        String destination = in.nextLine().trim();
         String time = in.nextLine().trim();
         try {
             JourneyInfo journey = app.findJourney(origin, destination, time);
@@ -131,8 +131,8 @@ public class Main {
     }
 
     private static void findJourneyMinStops(Scanner in, App app) {
-        String origin = in.nextLine();
-        String destination = in.nextLine();
+        String origin = in.nextLine().trim();
+        String destination = in.nextLine().trim();
         String intervalStart = in.next().trim();
         String intervalEnd = in.next().trim();
         in.nextLine();
@@ -161,7 +161,7 @@ public class Main {
     }
 
     private static void removeJourney(Scanner in, App app) {
-        String id = in.nextLine();
+        String id = in.nextLine().trim();
         try {
             app.removeJourney(id);
             System.out.print(Message.REMOVED);

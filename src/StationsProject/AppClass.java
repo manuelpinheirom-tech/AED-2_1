@@ -57,9 +57,9 @@ public class AppClass implements App, Serializable {
 
     @Override
     public void addJourney(String id, int stationNumber) throws ElementAlreadyExistsException {
-        journeyIndex ++;
         if(journeys.get(id.toLowerCase()) != null) //ver se isto n dá merda
             throw new ElementAlreadyExistsException();
+        journeyIndex ++;
         Journey journey = new JourneyClass(id, stationNumber, journeyIndex);
         journeys.put(id.toLowerCase(), journey);
     }
@@ -104,8 +104,6 @@ public class AppClass implements App, Serializable {
             Stop stop = journey.stopAtIdx(i);
             stop.station().removeDeparture(stop);
         }
-        journeyIndex --;
-
     }
 
     @Override
