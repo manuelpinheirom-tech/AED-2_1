@@ -22,6 +22,7 @@ public class InOrderIterator<E> implements Iterator<E> {
      *
      * @param root
      */
+    @SuppressWarnings("this-escape")
     public  InOrderIterator(BTNode<E> root) {
         this.root=root;
         rewind();

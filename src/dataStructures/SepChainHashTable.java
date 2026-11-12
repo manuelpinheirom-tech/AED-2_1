@@ -15,6 +15,9 @@ import java.io.ObjectOutputStream;
  */
 public class SepChainHashTable<K,V> extends HashTable<K,V> {
 
+    @java.io.Serial
+    private static final long serialVersionUID = 1L;
+
     //Load factors
     static final float IDEAL_LOAD_FACTOR =0.75f;
     static final float MAX_LOAD_FACTOR =0.9f;

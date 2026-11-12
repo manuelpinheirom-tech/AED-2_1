@@ -7,6 +7,9 @@ package dataStructures;
  */
 abstract class BTree<E> extends LinkedTree<E> {
 
+    @java.io.Serial
+    private static final long serialVersionUID = 1L;
+
     public BTree(){
       super();
     }

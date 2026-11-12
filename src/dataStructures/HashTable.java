@@ -13,6 +13,8 @@ import java.io.Serial;
  */
  abstract class HashTable<K,V> implements Map<K,V>{
 
+    @java.io.Serial
+    private static final long serialVersionUID = 1L;
      // Default size of the hash table.
      static final int DEFAULT_CAPACITY = 50;
      // Resize Factor

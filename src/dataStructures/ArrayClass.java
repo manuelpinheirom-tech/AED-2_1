@@ -6,6 +6,7 @@ import dataStructures.exceptions.NoSuchElementException;
 import java.io.Serial;
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class ArrayClass<E> implements List<E>, Serializable {
     private static final int SIZE = 50;
     @Serial

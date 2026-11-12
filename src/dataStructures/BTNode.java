@@ -9,6 +9,7 @@ import java.io.Serializable;
  * @version 1.0
  * @param <E> Generic Element
  */
+@SuppressWarnings("serial")
 class BTNode<E> implements InfoNode<E>, Serializable {
     // Element stored in the node.
     private E element;

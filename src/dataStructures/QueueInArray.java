@@ -4,6 +4,9 @@ import dataStructures.exceptions.EmptyQueueException;
 import dataStructures.exceptions.FullQueueException;
 
 class QueueInArray<E> implements Queue<E> {
+    @java.io.Serial
+    private static final long serialVersionUID = 1L;
+    
     // Default capacity of the stack.
     static final int DEFAULTCAPACITY = 1000;
     private final List<E> elements;

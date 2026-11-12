@@ -9,7 +9,11 @@ import java.io.Serializable;
  * @param <E> Generic Element
  *
  */
+@SuppressWarnings("serial")
 class SinglyListNode<E> implements LinkedNode<E> {
+
+    @java.io.Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * Element stored in the node.

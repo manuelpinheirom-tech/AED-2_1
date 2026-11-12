@@ -114,7 +114,7 @@ public class AppClass implements App, Serializable {
         Station destinationStation = stations.get(destination.toLowerCase());
         if (originStation == null || destinationStation == null)
             throw new InvalidStationException();
-        if (!validTime(time))
+        if (invalidTime(time))
             throw new InvalidTimeException();
         if (originStation.getPosition() >= destinationStation.getPosition())
             throw new StationsOrderException();
@@ -143,7 +143,7 @@ public class AppClass implements App, Serializable {
         Station destinationStation = stations.get(destination.toLowerCase());
         if (originStation == null || destinationStation == null)
             throw new InvalidStationException();
-        if (!validTime(minTime) || !validTime(maxTime))
+        if (invalidTime(minTime) || invalidTime(maxTime))
             throw new InvalidTimeException();
         if (minTime.compareTo(maxTime) > 0)
             throw new InvalidIntervalException();
@@ -173,13 +173,13 @@ public class AppClass implements App, Serializable {
 
     private static boolean validTime(String time){
         if (time == null || time.length() != 5 || time.charAt(2) != ':')
-            return false;
+            return true;
         try {
             int hour = Integer.parseInt(time.substring(0, 2));
             int minute = Integer.parseInt(time.substring(3, 5));
-            return hour >= MIN_HOUR && hour <= MAX_HOUR && minute >= MIN_MINUTE && minute <= MAX_MINUTE;
+            return hour < MIN_HOUR || hour > MAX_HOUR || minute < MIN_MINUTE || minute > MAX_MINUTE;
         }catch (NumberFormatException e){
-            return false;
+            return true;
         }
     }
 }

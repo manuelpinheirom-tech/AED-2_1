@@ -10,6 +10,9 @@ import java.io.Serializable;
      * 
      */
 class DoublyListNode<E> extends SinglyListNode<E> implements Serializable {
+    @java.io.Serial
+    private static final long serialVersionUID = 1L;
+
         /**
          * (Pointer to) the previous node.
          */

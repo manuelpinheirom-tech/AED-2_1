@@ -9,7 +9,8 @@ public class ArrayIterator<T> implements TwoWayIterator<T> {
 	private final int counter;
 	private int currentN;
 	private int currentP;
-	
+
+    @SuppressWarnings("this-escape")
 	public ArrayIterator(T[] elems, int counter) {
 		this.elems = elems;
 		this.counter = counter;

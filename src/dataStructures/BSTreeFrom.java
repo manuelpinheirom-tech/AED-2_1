@@ -5,6 +5,8 @@ import dataStructures.exceptions.NoSuchElementException;
 
 
 public class BSTreeFrom<K extends Comparable<K>, V> extends BSTree<K, V> {
+    @java.io.Serial
+    private static final long serialVersionUID = 1L;
 
     public BSTreeFrom() {
         super();
