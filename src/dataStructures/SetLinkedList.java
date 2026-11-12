@@ -9,7 +9,7 @@ public class SetLinkedList<E> extends LinkedList<E> implements Set<E> {
     @Override
     void addElem(E element) {
         //TODO: Left as an exercise.
-        DoublyListNode<E> newNode = new DoublyListNode<>(element, tail, null);
+        DoublyListNode<E> newNode = new DoublyListNode<>(element, (DoublyListNode<E>) tail, null);
         if (head == null)
             head = newNode;
         else

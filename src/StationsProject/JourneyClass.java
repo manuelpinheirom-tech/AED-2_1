@@ -1,6 +1,8 @@
 package StationsProject;
 
-public class JourneyClass implements Journey {
+import java.io.Serializable;
+
+public class JourneyClass implements Journey, Serializable {
     private final String id;
     private final int position;
     private final Stop[] stops; //mudar este array para arrayclass ?
@@ -43,13 +45,9 @@ public class JourneyClass implements Journey {
     }
 
     @Override
-    public String getOriginName() {
-        return stops[0].station().getName();
-    }
-
-    @Override
-    public String getDestinationName() {
-        return stops[stopsNumber-1].station().getName();
+    public String getRealName(String name) {
+        Stop stop = findStop(name);
+        return stop.station().getName();
     }
 
     @Override
@@ -76,7 +74,7 @@ public class JourneyClass implements Journey {
     public Stop findStop(String stop) {
         for(int i = 0; i < stopsNumber; i++) {
             if(stops[i] != null) {
-                if (stops[i].station().getName().equals(stop)){
+                if (stops[i].station().getName().equalsIgnoreCase(stop)){
                     return stops[i];
                 }
             }
@@ -132,7 +130,7 @@ public class JourneyClass implements Journey {
 
     @Override
     public int getStopsBetween(Stop origin, Stop destination) {
-        return indexOf(destination.station(), 0) - indexOf(origin.station(), 1);
+        return indexOf(destination.station(), 0) - indexOf(origin.station(), 1) -1;
     }
 
     @Override

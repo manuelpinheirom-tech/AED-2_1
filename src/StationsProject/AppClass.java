@@ -37,7 +37,7 @@ public class AppClass implements App, Serializable {
 
     @Override
     public void addStation(String station) {
-        stations.put(station, new StationClass(station, stations.size()));
+        stations.put(station.toLowerCase(), new StationClass(station, stations.size()));
     }
 
     public static App restoreApp(String SERIAL_FILE) {
@@ -55,10 +55,10 @@ public class AppClass implements App, Serializable {
     @Override
     public void addJourney(String id, int stationNumber) throws ElementAlreadyExistsException {
         journeyIndex ++;
-        if(journeys.get(id) != null) //ver se isto n dá merda
+        if(journeys.get(id.toLowerCase()) != null) //ver se isto n dá merda
             throw new ElementAlreadyExistsException();
         Journey journey = new JourneyClass(id, stationNumber, journeyIndex);
-        journeys.put(id, journey);
+        journeys.put(id.toLowerCase(), journey);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class AppClass implements App, Serializable {
     }
 
     private static void updateDepartures(Journey journey) {
-        for(int i = 0; i < journey.getStopsNumber(); i++) {
+        for(int i = 0; i < journey.getStopsNumber() -1; i++) {
             Stop stop = journey.stopAtIdx(i);
             stop.station().addDeparture(stop);
         }
@@ -94,10 +94,10 @@ public class AppClass implements App, Serializable {
     public void removeJourney(String id) throws NoSuchElementException {
         if (journeyIndex ==  NO_JOURNEYS)
             throw new NoSuchElementException();
-        Journey journey = journeys.remove(id);
+        Journey journey = journeys.remove(id.toLowerCase());
         if(journey == null)
             throw new NoSuchElementException();
-        for(int i = 0; i < journey.getStopsNumber(); i++) {
+        for(int i = 0; i < journey.getStopsNumber() -1 ; i++) {
             Stop stop = journey.stopAtIdx(i);
             stop.station().removeDeparture(stop);
         }
@@ -107,8 +107,8 @@ public class AppClass implements App, Serializable {
 
     @Override
     public JourneyInfo findJourney(String origin, String destination, String time) throws InvalidStationException, InvalidTimeException, StationsOrderException, NoSuchElementException {
-        Station originStation = stations.get(origin);
-        Station destinationStation = stations.get(destination);
+        Station originStation = stations.get(origin.toLowerCase());
+        Station destinationStation = stations.get(destination.toLowerCase());
         if (originStation == null || destinationStation == null)
             throw new InvalidStationException();
         if (!validTime(time))
@@ -136,8 +136,8 @@ public class AppClass implements App, Serializable {
 
     @Override
     public JourneyInfo findJourneyMinStops(String origin, String destination, String minTime, String maxTime) throws InvalidStationException, InvalidTimeException, InvalidIntervalException, StationsOrderException, NoSuchElementException {
-        Station originStation = stations.get(origin); //maybe to lower case?
-        Station destinationStation = stations.get(destination);
+        Station originStation = stations.get(origin.toLowerCase());
+        Station destinationStation = stations.get(destination.toLowerCase());
         if (originStation == null || destinationStation == null)
             throw new InvalidStationException();
         if (!validTime(minTime) || !validTime(maxTime))

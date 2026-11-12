@@ -2,8 +2,10 @@ package StationsProject;
 
 import dataStructures.*;
 
+import java.io.Serializable;
 
-public class StationClass implements Station {
+
+public class StationClass implements Station, Serializable {
     private final String name;
     private final int position;
     private final BSTreeFrom<DepartureKey, Stop> departures;

@@ -4,9 +4,7 @@ public interface JourneyInfo {
 
     String getId();
 
-    String getOriginName();
-
-    String getDestinationName();
+    String getRealName(String name);
 
     String getDepartureTime(String station);
 

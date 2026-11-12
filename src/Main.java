@@ -18,7 +18,8 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        App app = loadApp(SERIAL_FILE, args[0]);
+        String lineFile = args.length > 0 ? args[0] : null;
+        App app = loadApp(SERIAL_FILE, lineFile);
         if (app == null) {
             System.out.print(Message.NO_LINE);
         } else {
@@ -78,9 +79,8 @@ public class Main {
             System.out.printf(Message.LOADING.toString(), n);
             return app;
         } catch (Exception e) {
-            App app = new AppClass();
             System.out.printf(Message.NO_LINE.toString());
-            return app;
+            return null;
         }
     }
 
@@ -102,7 +102,7 @@ public class Main {
         } catch (ElementAlreadyExistsException e) {
             System.out.print(Message.ALREADY_EXISTS);
             clearBuffer(in, n * 3 -2);
-            // meter aqui contantes ig
+            // meter aqui contantes ig no enum
         }
     }
 
@@ -117,9 +117,9 @@ public class Main {
             else {
                 System.out.printf(Message.JOURNEY.toString() ,
                         journey.getId(),
-                        journey.getOriginName(),
+                        journey.getRealName(origin),
                         journey.getDepartureTime(origin),
-                        journey.getDestinationName(),
+                        journey.getRealName(destination),
                         journey.getArrivalTime(destination));
             }
         } catch (InvalidStationException e) {
@@ -144,9 +144,9 @@ public class Main {
             else {
                 System.out.printf(Message.JOURNEY_STOPS.toString(),
                         journey.getId(),
-                        journey.getOriginName(),
+                        journey.getRealName(origin),
                         journey.getDepartureTime(origin),
-                        journey.getDestinationName(),
+                        journey.getRealName(destination),
                         journey.getArrivalTime(destination),
                         journey.getStopsBetween(origin, destination));
             }
