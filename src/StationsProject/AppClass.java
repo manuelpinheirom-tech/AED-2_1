@@ -12,6 +12,9 @@ public class AppClass implements App, Serializable {
     private final Map<String, Journey> journeys;
     private int journeyIndex;
 
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private static final int NO_JOURNEYS = -1;
     private static final int MIN_HOUR = 0;
     private static final int MIN_MINUTE = 0;

@@ -171,6 +171,7 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
 
     }
 
+    @SuppressWarnings("unchecked")
     void readData(ObjectInputStream ios)
             throws IOException, ClassNotFoundException {
         //TODO: Left as an exercise.

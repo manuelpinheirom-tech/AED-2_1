@@ -1,5 +1,6 @@
 package StationsProject;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 public class JourneyClass implements Journey, Serializable {
@@ -7,6 +8,9 @@ public class JourneyClass implements Journey, Serializable {
     private final int position;
     private final Stop[] stops; //mudar este array para arrayclass ?
     private final int stopsNumber;
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private int stopIdx;
 

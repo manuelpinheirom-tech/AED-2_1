@@ -3,8 +3,13 @@ package dataStructures;
 import dataStructures.exceptions.InvalidPositionException;
 import dataStructures.exceptions.NoSuchElementException;
 
-public class ArrayClass<E> implements List<E> {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class ArrayClass<E> implements List<E>, Serializable {
     private static final int SIZE = 50;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * Array of elements E.

@@ -2,6 +2,7 @@ package StationsProject;
 
 import dataStructures.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 
@@ -9,6 +10,9 @@ public class StationClass implements Station, Serializable {
     private final String name;
     private final int position;
     private final BSTreeFrom<DepartureKey, Stop> departures;
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     public StationClass(String name, int position) {
         this.name = name;

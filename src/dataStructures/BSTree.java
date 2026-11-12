@@ -2,9 +2,8 @@ package dataStructures;
 
 import dataStructures.exceptions.EmptyMapException;
 import dataStructures.Map.Entry;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+
+import java.io.*;
 
 /**
  * Binary Search Tree Sorted Map
@@ -13,16 +12,21 @@ import java.io.ObjectOutputStream;
  * @param <K> Generic Key
  * @param <V> Generic Value
  */
-public class BSTree<K extends Comparable<K>,V> extends BTree<Entry<K,V>> implements SortedMap<K,V> {
+public class BSTree<K extends Comparable<K>,V> extends BTree<Entry<K,V>> implements SortedMap<K,V>, Serializable {
     /**
      * Comparator
      */
     private Comparator<K> comparator;
+
+    @Serial
+    private static final long serialVersionUID = 1L;
     /**
      * Default comparator
      * @param <K>
      */
-    static class DefaultComparator<K extends Comparable<K>> implements Comparator<K> {
+    static class DefaultComparator<K extends Comparable<K>> implements Comparator<K>, Serializable {
+        @Serial
+        private static final long serialVersionUID = 1L;
         public int compare(K a, K b)  {
             return a.compareTo(b);
         }

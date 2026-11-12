@@ -1,5 +1,6 @@
 package dataStructures;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -17,6 +18,9 @@ class BTNode<E> implements InfoNode<E>, Serializable {
     private InfoNode<E> leftChild;
     // (Pointer to) the right child.
     private InfoNode<E> rightChild;
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * Constructor
