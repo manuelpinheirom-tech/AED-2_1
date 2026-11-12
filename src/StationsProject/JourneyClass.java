@@ -134,7 +134,7 @@ public class JourneyClass implements Journey, Serializable {
 
     @Override
     public int getStopsBetween(Stop origin, Stop destination) {
-        return indexOf(destination.station(), 0) - indexOf(origin.station(), 1) -1;
+        return indexOf(destination.station(), 0) - indexOf(origin.station(), 1);
     }
 
     @Override
@@ -150,7 +150,7 @@ public class JourneyClass implements Journey, Serializable {
         Stop d1 = this.findStop(destination.getName());
         Stop stop2 = other.findStop(origin.getName());
         Stop d2 = other.findStop(destination.getName());
-        int cmp = Integer.compare(this.getStopsBetween(stop1, stop2), other.getStopsBetween(stop1, stop2));
+        int cmp = Integer.compare(this.getStopsBetween(stop1, d1), other.getStopsBetween(stop2, d2));
         if(cmp != 0)
             return cmp;
         cmp = (this.getArrivalTime(d1)).compareTo(other.getArrivalTime(d2));
