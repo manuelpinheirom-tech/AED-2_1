@@ -231,7 +231,8 @@ public class BSTree<K extends Comparable<K>,V> extends BTree<Entry<K,V>> impleme
 
     void readData(ObjectInputStream ois)
             throws IOException, ClassNotFoundException {
-        comparator = (Comparator<K>) ois.readObject();
-    }
+        @SuppressWarnings("unchecked")
+        Comparator<K> c = (Comparator<K>) ois.readObject();
+        comparator = c;    }
 
 }

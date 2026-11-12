@@ -171,7 +171,7 @@ public class AppClass implements App, Serializable {
         return bestJourney;
     }
 
-    private static boolean validTime(String time){
+    private static boolean invalidTime(String time){
         if (time == null || time.length() != 5 || time.charAt(2) != ':')
             return true;
         try {

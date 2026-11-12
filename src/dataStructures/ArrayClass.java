@@ -53,7 +53,7 @@ public class ArrayClass<E> implements List<E>, Serializable {
 
     @Override
     public Iterator<E> iterator() {
-        return new ArrayIterator(elems,  counter);
+        return new ArrayIterator<E>(elems,  counter);
     }
 
     @Override

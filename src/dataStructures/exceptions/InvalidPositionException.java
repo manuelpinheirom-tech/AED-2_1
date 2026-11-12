@@ -1,6 +1,9 @@
 package dataStructures.exceptions;
 
+import java.io.Serial;
+
 public class InvalidPositionException extends RuntimeException{
-    static final long serialVersionUID = 0L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 }
 

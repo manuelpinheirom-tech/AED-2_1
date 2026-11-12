@@ -35,7 +35,7 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
        table = createTable(capacity);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private Set<Entry<K,V>>[] createTable(int capacity){
         Set<Entry<K,V>>[] aux;
         int arraySize = HashTable.nextPrime((int) (capacity / IDEAL_LOAD_FACTOR));
