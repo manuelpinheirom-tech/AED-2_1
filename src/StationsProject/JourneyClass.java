@@ -134,7 +134,7 @@ public class JourneyClass implements Journey, Serializable {
 
     @Override
     public int getStopsBetween(Stop origin, Stop destination) {
-        return indexOf(destination.station(), 0) - indexOf(origin.station(), 1);
+        return indexOf(destination.station(), 0) - indexOf(origin.station(), 1) -1;
     }
 
     @Override
