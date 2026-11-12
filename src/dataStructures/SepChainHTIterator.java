@@ -10,48 +10,46 @@ import dataStructures.exceptions.NoSuchElementException;
  * @param <V> Generic Value
  */
 
-class SepChainHTIterator<K,V> implements Iterator<Map.Entry<K,V>> {
+    class SepChainHTIterator<K,V> implements Iterator<Map.Entry<K,V>> {
 
+        private final Set<Map.Entry<K, V>>[] table;
 
-    private final Map<K,V>[] table;
+        private int nextBucket;
 
-    private int nextBucket;
+        private Iterator<Map.Entry<K, V>> bucketIterator;
 
-    private Iterator<Map.Entry<K,V>> bucketIterator;
+        public SepChainHTIterator(Set<Map.Entry<K, V>>[] table) {
+            this.table = table;
+            rewind();
+        }
 
-    //TODO: Left as an exercise.
-    public SepChainHTIterator(Map<K,V>[] table) {
-        this.table = table;
-        rewind();
-    }
+        private void findNextBucket() {
+            while ((bucketIterator == null || !bucketIterator.hasNext())
+                    && nextBucket < table.length) {
+                Set<Map.Entry<K, V>> bucket = table[nextBucket++];
+                bucketIterator = (bucket == null) ? null : bucket.iterator();
+            }
+        }
 
-    private void findNextBucket() {
-        while ((bucketIterator == null || !bucketIterator.hasNext())
-                && nextBucket < table.length) {
-            Map<K,V> bucket = table[nextBucket++];
-            bucketIterator = (bucket == null) ? null : bucket.iterator();
+        @Override
+        public boolean hasNext() {
+            return bucketIterator != null && bucketIterator.hasNext();
+        }
+
+        @Override
+        public Map.Entry<K, V> next() throws NoSuchElementException {
+            if (!hasNext())
+                throw new NoSuchElementException();
+            Map.Entry<K, V> entry = bucketIterator.next();
+            findNextBucket();
+            return entry;
+        }
+
+        @Override
+        public void rewind() {
+            nextBucket = 0;
+            bucketIterator = null;
+            findNextBucket();
         }
     }
-
-    @Override
-    public boolean hasNext() {
-        return bucketIterator != null && bucketIterator.hasNext();
-    }
-
-    @Override
-    public Map.Entry<K, V> next() throws NoSuchElementException {
-        if (!hasNext())
-            throw new NoSuchElementException();
-        Map.Entry<K,V> entry = bucketIterator.next();
-        findNextBucket();
-        return entry;
-    }
-
-    @Override
-    public void rewind() {
-        nextBucket = 0;
-        bucketIterator = null;
-        findNextBucket();
-    }
-}
 

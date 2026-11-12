@@ -1,20 +1,22 @@
 package StationsProject;
 
-public interface Journey {
+public interface Journey extends JourneyInfo {
 
-    int NO_TIME = -1;
+    int getPosition();
 
-    long order();
+    Stop stopAtIdx(int index);
 
-    int size();
+    Stop stopsAfter(Station station, int index);
 
-    StopClass stopAt(int index);
+    Stop findStop(String stop);
 
     int indexOf(Station station, int from);
 
-    void addFirstStop(String station, String departure);
+    void addFirstStop(Station station, String departure);
 
-    void addStop(String station, String arrival, String departure);
+    void addStop(Station station, String arrival, String departure);
 
-    void addLastStop(String station, String arrival);
+    void addLastStop(Station station, String arrival);
+
+    int compareTo(Journey other, Station origin, Station destination);
 }

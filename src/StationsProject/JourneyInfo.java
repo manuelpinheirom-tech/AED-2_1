@@ -10,9 +10,16 @@ public interface JourneyInfo {
 
     String getDepartureTime(String station);
 
+    String getDepartureTime(Stop stop);
+
     String getArrivalTime(String station);
 
-    int getStops(String origin, String destination);
+    String getArrivalTime(Stop stop);
 
-    String getDepartureStation();
+    int getStopsNumber();
+
+    int getStopsBetween(Stop origin, Stop destination);
+
+    int getStopsBetween(String origin, String destination);
+
 }

@@ -1,7 +1,6 @@
 package StationsProject;
 
-import dataStructures.exceptions.ElementAlreadyExistsException;
-import dataStructures.exceptions.NoSuchElementException;
+import dataStructures.exceptions.*;
 
 import java.io.Serializable;
 
@@ -21,7 +20,15 @@ public interface App extends Serializable {
             throws InvalidStationException, InvalidTimeException, InvalidIntervalException,
             StationsOrderException, NoSuchElementException;
 
+    void saveApp(App app, String SERIAL_FILE);
 
+    void addStop(String id, String station, String arrival, String departure);
+
+    void addFirstStop(String id, String station, String departure);
+
+    void addLastStop(String id, String station, String arrival);
+
+    void addStation(String station);
 
 
 }

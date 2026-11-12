@@ -4,8 +4,7 @@ import StationsProject.AppClass;
 import dataStructures.Iterator;
 
 import java.io.*;
-import dataStructures.exceptions.NoSuchElementException;
-import dataStructures.exceptions.ElementAlreadyExistsException;
+import dataStructures.exceptions.*;
 import java.util.Scanner;
 
 /**
@@ -17,10 +16,9 @@ public class Main {
 
     private static final String SERIAL_FILE = "1_.ser";
 
-
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        App app = loadApp(args);
+        App app = loadApp(SERIAL_FILE, args[0]);
         if (app == null) {
             System.out.print(Message.NO_LINE);
         } else {
@@ -28,7 +26,6 @@ public class Main {
         }
         in.close();
     }
-
 
     private static void commandInterpreter(Scanner in, App app) {
         Command command = Command.fromString(in.nextLine());
@@ -45,57 +42,35 @@ public class Main {
         quit(app);
     }
 
-
     private static void help() {
         System.out.print(Message.HELP);
     }
 
 
     private static void quit(App app) {
-        saveApp(app);
-    }
-
-        // esta merda tem de ir somehow para a appClass
-    private static void saveApp(App app) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SERIAL_FILE))) {
-            oos.writeObject(app);
-            oos.flush();
-            System.out.print(Message.QUIT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        app.saveApp(app, SERIAL_FILE);
+        System.out.print(Message.QUIT);
     }
 
 
-    private static App loadApp(String[] args) {
-        App app = restoreApp();
-        if (app != null) {
+    private static App loadApp(String SERIAL_FILE, String lineFile) {
+        try{
+            App app = AppClass.restoreApp(SERIAL_FILE);
             System.out.print(Message.RESTORED);
             return app;
-        }
-        if (args.length > 0) {
-            app = createApp(args[0]);
-        }
-        return app;
-    }
-
-    private static App restoreApp() {
-        File file = new File(SERIAL_FILE);
-        if (!file.exists()) {
-            return null;
-        }
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-            return (App) ois.readObject();
-        } catch (Exception e) {
-            return null;
+        }catch(NoSuchElementException e){
+            return createApp(lineFile);
         }
     }
 
-    private static AppClass createApp(String path) {
+    private static App createApp(String path) {
+        if(path == null) {
+            return null;
+        }
         try (Scanner file = new Scanner(new File(path))) {
             int n = file.nextInt();
             file.nextLine();
-            AppClass app = new AppClass(n);
+            App app = new AppClass();
             for (int i = 0; i < n; i++) {
                 app.addStation(file.nextLine().trim());
             }
@@ -103,10 +78,11 @@ public class Main {
             System.out.printf(Message.LOADING.toString(), n);
             return app;
         } catch (Exception e) {
-            return null;
+            App app = new AppClass();
+            System.out.printf(Message.NO_LINE.toString());
+            return app;
         }
     }
-
 
     private static void addJourney(Scanner in, App app) {
         String id = in.nextLine();
@@ -126,6 +102,7 @@ public class Main {
         } catch (ElementAlreadyExistsException e) {
             System.out.print(Message.ALREADY_EXISTS);
             clearBuffer(in, n * 3 -2);
+            // meter aqui contantes ig
         }
     }
 
@@ -140,7 +117,7 @@ public class Main {
             else {
                 System.out.printf(Message.JOURNEY.toString() ,
                         journey.getId(),
-                        journey.getDepartureStation(),
+                        journey.getOriginName(),
                         journey.getDepartureTime(origin),
                         journey.getDestinationName(),
                         journey.getArrivalTime(destination));
@@ -171,7 +148,7 @@ public class Main {
                         journey.getDepartureTime(origin),
                         journey.getDestinationName(),
                         journey.getArrivalTime(destination),
-                        journey.getStops(origin, destination));
+                        journey.getStopsBetween(origin, destination));
             }
         } catch (InvalidStationException e) {
             System.out.print(Message.INVALID_STATION);

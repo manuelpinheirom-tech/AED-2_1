@@ -112,25 +112,25 @@ public class BSTree<K extends Comparable<K>,V> extends BTree<Entry<K,V>> impleme
                 return oldValue;
             }
             parent = current;
-            if (comp < 0) {
-                current = (BTNode<Entry<K, V>>) current.getLeftChild();
-            } else {
+            if (comp < 0)
+                current = (BTNode<Entry<K,V>>) current.getLeftChild();
+            else
                 current = (BTNode<Entry<K,V>>) current.getRightChild();
-            }
         }
 
-        BTNode<Entry<K,V>> newNode = new BTNode<>(new Entry<>(key, value));
+        BTNode<Entry<K,V>> newNode = new BTNode<>(new Entry<>(key, value), parent);
 
-        if (parent == null) {
+        if (parent == null)
             root = newNode;
-        } else if (comp < 0) {
+        else if (comp < 0)
             parent.setLeftChild(newNode);
-        } else {
+        else
             parent.setRightChild(newNode);
-        }
 
+        currentSize++;
         return null;
     }
+
 
     /**
      * If there is an entry in the map whose key is the specified key,
@@ -143,42 +143,64 @@ public class BSTree<K extends Comparable<K>,V> extends BTree<Entry<K,V>> impleme
      */
     public V remove(K key) {
         //TODO: Left as an exercise.
-            V oldValue = get(key);
-
-            if (oldValue != null) {
-                root = removeRecursively((BTNode<Entry<K,V>>) root, key);
-            }
-
-            return oldValue;
-        }
-
-        private BTNode<Entry<K,V>> removeRecursively(BTNode<Entry<K,V>> node, K key) {
-            if (node == null) return null;
-
+        BTNode<Entry<K,V>> node = (BTNode<Entry<K,V>>) root;
+        BTNode<Entry<K,V>> parent = null;
+        while (node != null) {
             int comp = comparator.compare(key, node.getElement().key());
-
-            if (comp < 0) {
-                node.setLeftChild(removeRecursively((BTNode<Entry<K, V>>) node.getLeftChild(), key));
-            } else if (comp > 0) {
-                node.setRightChild(removeRecursively((BTNode<Entry<K, V>>) node.getRightChild(), key));
-            } else {
-                if (node.getLeftChild() == null)
-                    return (BTNode<Entry<K, V>>) node.getRightChild();
-                if (node.getRightChild() == null)
-                    return (BTNode<Entry<K, V>>) node.getLeftChild();
-
-                BTNode<Entry<K,V>> minRight = findMin((BTNode<Entry<K, V>>) node.getRightChild());
-                node.setElement(minRight.getElement()); // Substitui o elemento
-                node.setRightChild(removeRecursively((BTNode<Entry<K, V>>) node.getRightChild(), minRight.getElement().key())); // Remove o duplicado
+            if (comp == 0) {
+                break;
             }
-            return node;
+            parent = node;
+            if (comp < 0)
+                node = (BTNode<Entry<K,V>>) node.getLeftChild();
+            else
+                node = (BTNode<Entry<K,V>>) node.getRightChild();
+        }
+        if (node == null)
+            return null;
+        V oldValue = node.getElement().value();
+        BTNode<Entry<K,V>> replacement;
+        if (node.getLeftChild() == null) {
+            replacement = (BTNode<Entry<K,V>>) node.getRightChild();
+        } else if (node.getRightChild() == null) {
+            replacement = (BTNode<Entry<K,V>>) node.getLeftChild();
+        } else {
+            BTNode<Entry<K,V>> succParent = node;
+            BTNode<Entry<K,V>> succ = (BTNode<Entry<K,V>>) node.getRightChild();
+            while (succ.getLeftChild() != null) {
+                succParent = succ;
+                succ = (BTNode<Entry<K,V>>) succ.getLeftChild();
+            }
+            if (succParent != node) {
+                InfoNode<Entry<K,V>> succRight = succ.getRightChild();
+                succParent.setLeftChild(succRight);
+                if (succRight != null)
+                    ((BTNode<Entry<K,V>>) succRight).setParent(succParent);
+
+                succ.setRightChild(node.getRightChild());
+                ((BTNode<Entry<K,V>>) node.getRightChild()).setParent(succ);
+            }
+            succ.setLeftChild(node.getLeftChild());
+            ((BTNode<Entry<K,V>>) node.getLeftChild()).setParent(succ);
+            replacement = succ;
+        }
+        if (replacement != null)
+            replacement.setParent(parent);
+        if (parent == null)
+            root = replacement;
+        else if (parent.getLeftChild() == node)
+            parent.setLeftChild(replacement);
+        else
+            parent.setRightChild(replacement);
+        currentSize--;
+        return oldValue;
         }
 
-        private BTNode<Entry<K,V>> findMin(BTNode<Entry<K,V>> node) {
-            while (node.getLeftChild() != null) {
-                node = (BTNode<Entry<K, V>>) node.getLeftChild();
-            }
-            return node;
+    private BTNode<Entry<K,V>> findMin(BTNode<Entry<K,V>> node) {
+        while (node.getLeftChild() != null) {
+            node = (BTNode<Entry<K, V>>) node.getLeftChild();
+        }
+        return node;
         }
 
     /**

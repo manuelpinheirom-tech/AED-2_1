@@ -1,40 +1,46 @@
 package StationsProject;
 
-import dataStructures.Iterator;
-import dataStructures.Map;
+import dataStructures.*;
+
 
 public class StationClass implements Station {
     private final String name;
     private final int position;
-    private final SortedMap<DepartureKey, Departure> departures;
+    private final BSTreeFrom<DepartureKey, Stop> departures;
 
     public StationClass(String name, int position) {
         this.name = name;
         this.position = position;
+        this.departures = new BSTreeFrom<>();
     }
 
     @Override
     public String getName() {
-        return "";
+        return this.name;
     }
 
     @Override
     public int getPosition() {
-        return 0;
+        return this.position;
     }
 
     @Override
-    public void addDeparture(Journey journey, int stopIndex) {
-
-    }
-
-    @Override
-    public void removeDeparture(Journey journey, int stopIndex) {
+    public void addDeparture(Stop stop) {
+        DepartureKey key = new DepartureKey(stop.departure(), stop.journey().getPosition());
+        departures.put(key, stop);
 
     }
 
     @Override
-    public Iterator<Map.Entry<DepartureKey, Departure>> departuresFrom(int time) {
-        return null;
+    public void removeDeparture(Stop stop) {
+        DepartureKey key = new DepartureKey(stop.departure(),stop.journey().getPosition());
+        departures.remove(key);
+
     }
+
+    @Override
+    public Iterator<Map.Entry<DepartureKey, Stop>> departuresFrom(String time) {
+        return departures.iteratorFrom(new DepartureKey(time, Integer.MIN_VALUE));
+    }
+
 }

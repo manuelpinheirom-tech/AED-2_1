@@ -8,10 +8,9 @@ public interface Station extends Serializable{
 
     int getPosition();
 
-    void addDeparture(Journey journey, int stopIndex);
+    void addDeparture(Stop stop);
 
-    void removeDeparture(Journey journey, int stopIndex);
+    void removeDeparture(Stop stop);
 
-    Iterator<Map.Entry<DepartureKey, Departure>> departuresFrom(int time);
-
+    Iterator<Map.Entry<DepartureKey, Stop>> departuresFrom(String time);
 }

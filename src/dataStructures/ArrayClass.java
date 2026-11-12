@@ -75,7 +75,7 @@ public class ArrayClass<E> implements List<E> {
     }
 
     @Override
-    public int indexOf(E element) {
+    public int indexOf(E element) { //nuh huh, quero pesquisa binária aqui
         for(int i = 0;i < counter; i++ ){
             if(elems[i].equals(element)){
                 return i;
