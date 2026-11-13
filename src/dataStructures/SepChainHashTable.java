@@ -104,7 +104,6 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
         //TODO: Left as an exercise.
         int index = hash(key);
         Iterator<Entry<K, V>> it = table[index].iterator();
-
         while (it.hasNext()) {
             Entry<K, V> entry = it.next();
             if (entry.getKey().equals(key)) {
@@ -114,7 +113,6 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
                 return oldValue;
             }
         }
-
         table[index].put(new Entry<>(key, value));
         currentSize++;
         return null;

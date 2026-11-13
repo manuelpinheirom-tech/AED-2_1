@@ -78,18 +78,17 @@ public class Main {
             System.out.printf(Message.LOADING.toString(), n);
             return app;
         } catch (Exception e) {
-            System.out.printf(Message.NO_LINE.toString());
             return null;
         }
     }
 
     private static void addJourney(Scanner in, App app) {
-        String id = in.nextLine();
+        String id = in.nextLine().trim();
         int n =  in.nextInt();
         in.nextLine();
         try {
         app.addJourney(id, n);
-        app.addFirstStop(id, in.nextLine(), in.nextLine().trim());
+        app.addFirstStop(id, in.nextLine().trim(), in.nextLine().trim());
         for (int i = 1; i < n - 1; i++) {
             String station = in.nextLine().trim();
             String arrival = in.nextLine().trim();
