@@ -47,6 +47,15 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
         return aux;
     }
 
+    private Set<Entry<K,V>>[] createExactTable(int arraySize){
+        Set<Entry<K,V>>[] aux;
+        maxSize = (int)(arraySize * MAX_LOAD_FACTOR);
+        aux = (Set<Entry<K,V>>[]) new Set[arraySize];
+        for ( int i = 0; i < arraySize; i++ )
+            aux[i] = new SetLinkedList<>();
+        return aux;
+    }
+
     private void rehash() {
         //TODO: Left as an exercise.Done
         Set<Entry<K, V>>[] oldTable = table;
@@ -179,7 +188,7 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
         int size = ios.readInt();
         int capacity = ios.readInt();
 
-        table = createTable(capacity);
+        table = createExactTable(capacity);
         this.currentSize = 0;
 
         for (int i = 0; i < size; i++) {
@@ -188,5 +197,5 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
             this.put(key, value);
         }
     }
-   
+
 }
