@@ -169,15 +169,12 @@ public class AppClass implements App, Serializable {
         return bestJourney;
     }
 
-    private static boolean invalidTime(String time){
-        if (time == null || time.length() != 5 || time.charAt(2) != ':')
-            return true;
-        try {
-            int hour = Integer.parseInt(time.substring(0, 2));
-            int minute = Integer.parseInt(time.substring(3, 5));
-            return hour < MIN_HOUR || hour > MAX_HOUR || minute < MIN_MINUTE || minute > MAX_MINUTE;
-        }catch (NumberFormatException e){
-            return true;
-        }
+    private static boolean invalidTime(String time) {
+        if (time == null || time.length() != 5 || time.charAt(2) != ':') return true;
+        for (int i : new int[]{0, 1, 3, 4})
+            if (!Character.isDigit(time.charAt(i))) return true;
+        int h = Integer.parseInt(time.substring(0, 2));
+        int m = Integer.parseInt(time.substring(3, 5));
+        return h > 23 || m > 59;
     }
 }
