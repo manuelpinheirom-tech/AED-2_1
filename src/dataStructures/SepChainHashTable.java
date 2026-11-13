@@ -47,6 +47,7 @@ public class SepChainHashTable<K,V> extends HashTable<K,V> {
         return aux;
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private Set<Entry<K,V>>[] createExactTable(int arraySize){
         Set<Entry<K,V>>[] aux;
         maxSize = (int)(arraySize * MAX_LOAD_FACTOR);
